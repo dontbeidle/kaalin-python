@@ -28,3 +28,10 @@ try:
 except NumberRangeError as e:
     print("San shegaradan asıp ketti!")
 ```
+```python
+from kaalin.utils import latin2cyrillic, cyrillic2latin
+
+
+print(latin2cyrillic("Assalawma áleykum"))      # Ассалаўма әлейкум
+print(cyrillic2latin("Ассалаўма әлейкум"))      # Assalawma áleykum
+```
