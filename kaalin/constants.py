@@ -1,4 +1,3 @@
-
 cyrillic_to_latin_uppercase = {
   'А': 'A',
   'Ә': 'Á',

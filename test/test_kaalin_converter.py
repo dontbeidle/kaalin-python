@@ -1,6 +1,7 @@
 import unittest
 from kaalin.converter.latin_cyrillic_converter import latin2cyrillic, cyrillic2latin
 
+
 class TestKaalinConverter(unittest.TestCase):
 
   def test_cyrillic2latin(self):
@@ -24,6 +25,7 @@ class TestKaalinConverter(unittest.TestCase):
     self.assertEqual(latin2cyrillic("qádir-qımbat"), "қәдир-қымбат")
     self.assertEqual(latin2cyrillic("yupiter"), "юпитер")
     self.assertEqual(latin2cyrillic("ÁJINIYAZ"), "ӘЖИНИЯЗ")
+
 
 if __name__ == '__main__':
   unittest.main()
