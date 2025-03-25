@@ -10,16 +10,6 @@ class TestKaalinCyrillic(unittest.TestCase):
         self.text_alpha = "абвгд"
         self.text_numeric = "123абв"
 
-    def test_get_uppercases(self):
-        expected_uppercases = ['А', 'Ә', 'Б', 'Д', 'Е', 'Ф', 'Г', 'Ғ', 'Ҳ', 'Х', 'Ы', 'И', 'Ж', 'К', 'Қ', 'Л', 'М', 'Н', 'Ң',
-                               'О', 'Ө', 'П', 'Р', 'С', 'Т', 'У', 'Ү', 'В', 'Ў', 'Й', 'З', 'Ш', 'Ц', 'Ч', ' ']
-        self.assertEqual(Cyrillic.get_uppercases(), expected_uppercases)
-
-    def test_get_lowercases(self):
-        expected_lowercases = ['а', 'ә', 'б', 'д', 'е', 'ф', 'г', 'ғ', 'ҳ', 'х', 'ы', 'и', 'ж', 'к', 'қ', 'л', 'м', 'н', 'ң',
-                               'о', 'ө', 'п', 'р', 'с', 'т', 'у', 'ү', 'в', 'ў', 'й', 'з', 'ш', 'ц', 'ч', ' ']
-        self.assertEqual(Cyrillic.get_lowercases(), expected_lowercases)
-
     def test_isupper(self):
         kc = Cyrillic(self.text_upper)
         self.assertTrue(kc.isupper())

@@ -1,8 +1,9 @@
+from kaalin.constants import latin_to_cyrillic_uppercase, latin_to_cyrillic_lowercase
+
+
 class Latin:
-    __uppercases = ['A', 'Á', 'B', 'D', 'E', 'F', 'G', 'Ǵ', 'H', 'X', 'Í', 'I', 'J', 'K', 'Q', 'L', 'M', 'N', 'Ń',
-                    'O', 'Ó', 'P', 'R', 'S', 'T', 'U', 'Ú', 'V', 'W', 'Y', 'Z', 'Ш', 'C', 'Ch', ' ']
-    __lowercases = ['a', 'á', 'b', 'd', 'e', 'f', 'g', 'ǵ', 'h', 'x', 'ı', 'i', 'j', 'k', 'q', 'l', 'm', 'n', 'ń',
-                    'o', 'ó', 'p', 'r', 's', 't', 'u', 'ú', 'v', 'w', 'y', 'z', 'sh', 'c', 'ch', ' ']
+    __uppercases = list(filter(lambda char: len(char) == 1, list(latin_to_cyrillic_uppercase.keys())))
+    __lowercases = list(filter(lambda char: len(char) == 1, list(latin_to_cyrillic_lowercase.keys())))
 
     def __init__(self, text):
         self.text = text

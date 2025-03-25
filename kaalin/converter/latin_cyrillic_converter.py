@@ -2,10 +2,6 @@ from kaalin.constants import latin_to_cyrillic, cyrillic_to_latin
 
 
 def latin2cyrillic(text: str) -> str:
-    """Latın jazıwın Kiril jazıwına ótkeriw"""
-    text = text.replace("sh", "ш")
-    text = text.replace("Sh", "Ш")
-    text = text.replace("SH", "Ш")
     result = []
     i = 0
     while i < len(text):
@@ -19,10 +15,20 @@ def latin2cyrillic(text: str) -> str:
 
 
 def cyrillic2latin(text: str) -> str:
-    """Kiril jazıwın Latın jazıwına ótkeriw"""
-    text = text.replace("ш", "sh")
-    text = text.replace("Ш", "Sh")
+    text = handle_special_cyrillic_rules_if_needed(text)
     result = []
     for char in text:
         result.append(cyrillic_to_latin.get(char, char))
     return ''.join(result)
+
+def handle_special_cyrillic_rules_if_needed(text: str) -> str:
+    special_rule_pairs = {
+        'ьи': 'yi',
+        'ьо': 'yo',
+        'ъе': 'ye',
+    }
+
+    for cyr, lat in special_rule_pairs.items():
+        if cyr in text and not text.startswith(cyr):
+            text = text.replace(cyr, lat)
+    return text
