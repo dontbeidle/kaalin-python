@@ -1,2 +1,2 @@
-from .number import Number
+from .number import NumberLatin, NumberCyrillic
 from .exceptions import NumberRangeError
