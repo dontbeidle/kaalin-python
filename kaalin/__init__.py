@@ -1,3 +1,3 @@
 from .words import Cyrillic, Latin
-from .number import Number
-from .number import NumberRangeError
+from .number import NumberLatin, NumberCyrillic, NumberRangeError
+from .converter import latin2cyrillic, cyrillic2latin
