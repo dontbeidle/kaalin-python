@@ -2,6 +2,20 @@ from kaalin.constants import cyrillic_to_latin_uppercase, cyrillic_to_latin_lowe
 
 
 class Cyrillic:
+  """
+  **Deprecated**: This class is deprecated and may be removed in the future.
+  Please use the `upper()` and `lower()` functions instead.
+
+  Example usage:
+
+  ```python
+  from kaalin.string import upper, lower
+
+  print(upper("Сәлем Әлем"))
+  print(lower("Сәлем Әлем"))
+  ```
+  """
+
   __uppercases = list(cyrillic_to_latin_uppercase.keys())
   __lowercases = list(cyrillic_to_latin_lowercase.keys())
 
