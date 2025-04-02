@@ -39,3 +39,9 @@ from kaalin.converter import latin2cyrillic, cyrillic2latin
 print(latin2cyrillic("Assalawma áleykum"))      # Ассалаўма әлейкум
 print(cyrillic2latin("Ассалаўма әлейкум"))      # Assalawma áleykum
 ```
+```python
+from kaalin.string import upper, lower
+
+print(upper("Assalawma áleykum")) 	  # ASSALAWMA ÁLEYKUM
+print(lower("Assalawma áleykum"))     # assalawma áleykum
+```
