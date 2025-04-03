@@ -78,10 +78,14 @@ class Number:
 
 
 class NumberLatin(Number):
+  """**Deprecated**: This class may be deprecated in the future."""
+  
   def __init__(self):
     super().__init__(self._NUM_TYPE_LAT)
 
 
 class NumberCyrillic(Number):
+  """**Deprecated**: This class may be deprecated in the future."""
+  
   def __init__(self):
     super().__init__(self._NUM_TYPE_CYR)
