@@ -41,6 +41,9 @@ def to_word(number: int, num_type: str = "lat") -> str:
         }
     }
     
+    if num_type not in ['lat', 'cyr']:
+        raise KeyError("Invalid num_type")
+    
     if not isinstance(number, int):
         raise TypeError("Input must be an integer")
         
