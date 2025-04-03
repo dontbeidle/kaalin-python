@@ -45,3 +45,9 @@ from kaalin.string import upper, lower
 print(upper("Assalawma áleykum")) 	  # ASSALAWMA ÁLEYKUM
 print(lower("Assalawma áleykum"))     # assalawma áleykum
 ```
+```python
+from kaalin.number import to_word
+
+print(to_word(2025))
+print(to_word(2025, num_type='cyr'))
+```
