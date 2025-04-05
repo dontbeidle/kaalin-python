@@ -78,7 +78,7 @@ class Number:
 
 
 class NumberLatin(Number):
-  """**Deprecated**: This class may be deprecated in the future."""
+  """**Deprecated**: This class is deprecated, call `to_word` function directly."""
   
   def __init__(self):
     super().__init__(self._NUM_TYPE_LAT)
