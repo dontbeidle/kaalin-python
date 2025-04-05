@@ -16,4 +16,4 @@ def upper(text: str) -> str:
 
 def lower(text: str) -> str:
   """Convert the text to lowercase with special character replacement."""
-  return text.lower().replace("Í", "ı")
+  return text.replace("Í", "ı").lower()
