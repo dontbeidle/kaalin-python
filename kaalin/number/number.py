@@ -85,7 +85,7 @@ class NumberLatin(Number):
 
 
 class NumberCyrillic(Number):
-  """**Deprecated**: This class may be deprecated in the future."""
+  """**Deprecated**: This class is deprecated, call `to_word` function directly, with passing 'cyr' as a `num_type` parameter."""
   
   def __init__(self):
     super().__init__(self._NUM_TYPE_CYR)
