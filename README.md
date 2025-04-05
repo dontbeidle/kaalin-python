@@ -48,6 +48,6 @@ print(lower("Assalawma áleykum"))     # assalawma áleykum
 ```python
 from kaalin.number import to_word
 
-print(to_word(2025))
-print(to_word(2025, num_type='cyr'))
+print(to_word(2025))                      # eki mıń jigirma bes
+print(to_word(2025, num_type='cyr'))      # еки мың жигирма бес
 ```
