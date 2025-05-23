@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '3.0.1'
+VERSION = '3.1.0'
 DESCRIPTION = 'Special opportunities for the Karakalpak language'
 
 # Setting up
@@ -21,6 +21,12 @@ setup(
     long_description=long_description,
     packages=find_packages(),
     install_requires=[],
+    entry_points={
+      "console_scripts": [
+          "cyr2lat=kaalin.cli.converter:cyr2lat",
+          "lat2cyr=kaalin.cli.converter:lat2cyr",
+      ]
+    },
     keywords=['karakalpak', 'language', 'python'],
     classifiers=[
         "Development Status :: 1 - Planning",
