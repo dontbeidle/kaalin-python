@@ -31,3 +31,9 @@ from kaalin.string import upper, lower
 print(upper("Assalawma áleykum"))     # ASSALAWMA ÁLEYKUM
 print(lower("Assalawma áleykum"))     # assalawma áleykum
 ```
+
+### Command Line Interface (CLI)
+```bash
+$ cyr2lat input.txt [output.txt]
+$ lat2cyr input.txt [output.txt]
+```
