@@ -4,14 +4,14 @@ from .exceptions import NumberRangeError
 def to_word(number: int, num_type: str = "lat") -> str:
     """
     Convert an integer to its text representation in either Latin or Cyrillic script.
-    
+
     Args:
         number: The integer to convert
         num_type: The type of script to use, either "lat" or "cyr"
-        
+
     Returns:
         The textual representation of the integer
-        
+
     Raises:
         NumberRangeError: If the input is not an integer or exceeds the maximum supported number (nonillion)
     """
@@ -23,6 +23,7 @@ def to_word(number: int, num_type: str = "lat") -> str:
     _KEY_TENS = 'tens'
     _KEY_HUNDRED = 'hundred'
     _KEY_THOUSANDS = 'thousands'
+    _KEY_MINUS_SIGN = 'minus'
 
     _locale = {
         _NUM_TYPE_LAT: {
@@ -31,6 +32,7 @@ def to_word(number: int, num_type: str = "lat") -> str:
             _KEY_TENS: ['on', 'jigirma', 'otız', 'qırıq', 'eliw', 'alpıs', 'jetpis', 'seksen', 'toqsan'],
             _KEY_THOUSANDS: ['', 'mıń', 'million', 'milliard', 'trillion', 'kvadrillion', 'kvintillion', 'sekstilion', 'septillion', 'oktillion', 'nonillion'],
             _KEY_HUNDRED: 'júz',
+            _KEY_MINUS_SIGN: 'minus',
         },
         _NUM_TYPE_CYR: {
             _KEY_ONES: ['ноль', 'бир', 'еки', 'үш', 'төрт', 'бес', 'алты', 'жети', 'сегиз', 'тоғыз'],
@@ -38,25 +40,30 @@ def to_word(number: int, num_type: str = "lat") -> str:
             _KEY_TENS: ['он', 'жигирма', 'отыз', 'қырық', 'елиў', 'алпыс', 'жетпис', 'сексен', 'тоқсан'],
             _KEY_THOUSANDS: ['', 'мың', 'миллион', 'миллиард', 'триллион', 'квадриллион', 'квинтиллион', 'секстиллион', 'септиллион', 'октиллион', 'нониллион'],
             _KEY_HUNDRED: 'жүз',
+            _KEY_MINUS_SIGN: 'минус',
         }
     }
-    
+
     if num_type not in ['lat', 'cyr']:
         raise KeyError("Invalid num_type")
-    
+
     if not isinstance(number, int):
         raise TypeError("Input must be an integer")
-        
+
+    is_negative = number < 0
+    number = abs(number)
+
     # Check if number exceeds nonillion (10^30)
-    if abs(number) > 10**30:
+    if number > 10**30:
         raise NumberRangeError("Number exceeded limit")
-    
+
     current_locale = _locale[_NUM_TYPE_CYR] if num_type == _NUM_TYPE_CYR else _locale[_NUM_TYPE_LAT]
-    
+
     ones = current_locale[_KEY_ONES]
     teens = current_locale[_KEY_TEENS]
     tens = current_locale[_KEY_TENS]
     thousands = current_locale[_KEY_THOUSANDS]
+    minus_sign = current_locale[_KEY_MINUS_SIGN]
 
     def convert_hundreds(num):
         if num < 10:
@@ -72,9 +79,9 @@ def to_word(number: int, num_type: str = "lat") -> str:
         if num == 0:
             return ones[num]
         if num == 100:
-            return current_locale[_KEY_HUNDRED]
+            return minus_sign + ' ' + current_locale[_KEY_HUNDRED] if is_negative else current_locale[_KEY_HUNDRED]
         if num == 1000:
-            return thousands[1]
+            return minus_sign + ' ' + thousands[1] if is_negative else thousands[1]
 
         parts = []
         i = 0
@@ -83,6 +90,8 @@ def to_word(number: int, num_type: str = "lat") -> str:
                 parts.append(convert_hundreds(num % 1000) + (" " + thousands[i] if thousands[i] else ""))
             num //= 1000
             i += 1
+        if is_negative:
+            parts.append(minus_sign)
         return " ".join(reversed(parts))
 
     return convert_number(number)
