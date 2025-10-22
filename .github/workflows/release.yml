@@ -21,13 +21,43 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install build twine
+          pip install build twine toml
+
+      # Extract version from tag (remove the "v" prefix)
+      - name: Extract version from tag
+        id: get_version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Detected version: $VERSION"
+
+      # Update version in pyproject.toml (if exists)
+      - name: Update version in pyproject.toml
+        if: ${{ hashFiles('pyproject.toml') != '' }}
+        run: |
+          python -c "
+import toml
+f='pyproject.toml'
+data=toml.load(f)
+if 'project' in data:
+    data['project']['version'] = '${{ env.VERSION }}'
+else:
+    data['tool']['poetry']['version'] = '${{ env.VERSION }}'
+toml.dump(data, open(f, 'w'))
+"
+
+      # Update version in setup.py (fallback)
+      - name: Update version in setup.py
+        if: ${{ hashFiles('setup.py') != '' }}
+        run: |
+          sed -i "s/version=.*,/version='${{ env.VERSION }}',/" setup.py
 
       - name: Build package
         run: python -m build
 
-      - name: Publish to PyPi
+      - name: Publish to PyPI
         env:
+          TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          python -m twine upload --username __token__ --password "$TWINE_PASSWORD" dist/*
+          python -m twine upload --non-interactive dist/*
