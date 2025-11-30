@@ -34,13 +34,17 @@ def test_large_numbers():
     assert to_word(10**30) == "bir nonillion"  # Maximum supported number
 
 
+def test_real_numbers():
+    assert to_word(1.1) == "bir pútin onnan bir"
+    assert to_word(0.5) == "nol pútin onnan bes"
+    assert to_word(12.456) == "on eki pútin mıńnan tórt júz eliw altı"
+    assert to_word(926.4) == "toǵız júz jigirma altı pútin onnan tórt"
+
+
 def test_error_cases():
     # Test non-integer input
     with pytest.raises(TypeError):
         to_word("123")
-    
-    with pytest.raises(TypeError):
-        to_word(123.45)
     
     # Test number exceeding limit
     with pytest.raises(NumberRangeError):
