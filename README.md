@@ -20,6 +20,7 @@ from kaalin.number import to_word, NumberRangeError
 try:
   print(to_word(123))                     # bir júz jigirma úsh
   print(to_word(999, num_type="cyr"))     # тоғыз жүз тоқсан тоғыз
+  print(to_word(12.75))                   # on eki pútin júzden jetpis bes
 except NumberRangeError as e:
   print("San shegaradan asıp ketti!")
 ```
