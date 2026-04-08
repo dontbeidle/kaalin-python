@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kaalin"
+version = "3.3.1"
+description = "Karakalpak language toolkit for Python — Latin/Cyrillic script conversion, number-to-words, and string utilities"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "Turdibek Jumabaev", email = "turdibekjumabaev05@gmail.com" },
+]
+keywords = [
+    "karakalpak",
+    "karakalpakstan",
+    "latin",
+    "cyrillic",
+    "transliteration",
+    "script-conversion",
+    "num2words",
+    "number-to-words",
+    "nlp",
+    "language-tools",
+    "turkic",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Topic :: Text Processing :: Linguistic",
+]
+
+[project.urls]
+Homepage = "https://github.com/dontbeidle/kaalin-python"
+Repository = "https://github.com/dontbeidle/kaalin-python"
+Issues = "https://github.com/dontbeidle/kaalin-python/issues"
+PyPI = "https://pypi.org/project/kaalin/"
+
+[project.scripts]
+cyr2lat = "kaalin.cli.converter:cyr2lat"
+lat2cyr = "kaalin.cli.converter:lat2cyr"
+
+[tool.setuptools.packages.find]
+include = ["kaalin*"]
