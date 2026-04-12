@@ -25,6 +25,7 @@ print(cyrillic2latin("Ассалаўма әлейкум"))  # Assalawma áleykum
 |---|---|
 | **Script Conversion** | Bidirectional Latin ↔ Cyrillic conversion with multi-character mapping (`sh`→`ш`, `ch`→`ч`) and special Cyrillic rules (`ьи`→`yi`, `ьо`→`yo`, `ъе`→`ye`) |
 | **Number to Words** | Converts integers and floats to Karakalpak words in Latin or Cyrillic script. Supports range 0 to 10³⁰, negative numbers, and decimal fractions |
+| **Word Syllabification** | Splits Karakalpak words into syllables, works with both Latin and Cyrillic scripts, preserves letter case, and recognises digraphs like `sh`, `ch`, `yu`, `ya`, `aw`, `ew` |
 | **String Utilities** | Karakalpak-aware `upper()` / `lower()` that correctly handle the dotless `ı` ↔ `Í` character pair |
 | **CLI Tools** | `cyr2lat` and `lat2cyr` commands for converting text files from the terminal |
 
@@ -58,6 +59,26 @@ to_word(-42)                     # minus qırıq eki
 
 **Raises:** `NumberRangeError` if `number` exceeds 10³⁰.
 
+### Word Syllabification
+
+```python
+from kaalin.syllable import syllabify
+
+syllabify("qaraqalpaqstan")   # ['qa', 'ra', 'qal', 'paq', 'stan']
+syllabify("kompyuter")        # ['kom', 'pyu', 'ter']
+syllabify("Шарапат")          # ['Ша', 'ра', 'пат']
+syllabify("Adam")             # ['A', 'dam']
+
+"-".join(syllabify("úydegiler"))   # 'úy-de-gi-ler'
+```
+
+**Parameters:**
+- `word` (`str`) — the word to split. Accepts Latin or Cyrillic input.
+
+**Returns:** A `list[str]` of syllables in the same script as the input. Words with fewer than two vowels are returned as a single-element list unchanged.
+
+**Raises:** `TypeError` if `word` is not a string.
+
 ### String Utilities
 
 ```python
@@ -87,6 +108,7 @@ lat2cyr input.txt output.txt   # writes output.txt
 
 - Converting Karakalpak text between Latin and Cyrillic scripts
 - Displaying numbers as Karakalpak words (invoices, checks, education)
+- Splitting words into syllables for hyphenation, typesetting, or language learning
 - NLP preprocessing for Karakalpak text (script normalization)
 - Building Karakalpak-language applications that need locale-aware string operations
 - Batch-converting text files via CLI
