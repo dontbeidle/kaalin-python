@@ -24,6 +24,7 @@ class TestKaalinConverter(unittest.TestCase):
     self.assertEqual(latin2cyrillic("Olarǵa"), "Оларға")
     self.assertEqual(latin2cyrillic("qádir-qımbat"), "қәдир-қымбат")
     self.assertEqual(latin2cyrillic("yupiter"), "юпитер")
+    self.assertEqual(latin2cyrillic("evropa"), "европа")
     self.assertEqual(latin2cyrillic("ÁJINIYAZ"), "ӘЖИНИЯЗ")
 
 
