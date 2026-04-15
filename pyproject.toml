@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kaalin"
-version = "3.3.3b1"
+version = "3.3.2.post1"
 description = "Karakalpak language toolkit for Python — Latin/Cyrillic script conversion, number-to-words, and string utilities"
 readme = "README.md"
 license = "MIT"
