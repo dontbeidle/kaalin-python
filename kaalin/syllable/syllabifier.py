@@ -24,6 +24,12 @@ from kaalin.converter import cyrillic2latin, latin2cyrillic
 _VOWELS = set("aáeioóuúíıÿŷåê")
 _CONSONANTS = set("bcdfgǵhjklmnńpqrsştçvwxyz")
 
+_ONSET_CLUSTERS = frozenset({
+    "bl", "br", "dr", "fl", "fr", "gl", "gr",
+    "kl", "kr", "pl", "pr", "sk", "sl", "sm", "sn", "sp", "st",
+    "tr",
+})
+
 # (original multi-char sequence, single-char placeholder)
 _AUTO_CORRECT_PAIRS = (
     ("sh", "ş"),
@@ -54,7 +60,7 @@ def _classify(text: str) -> str:
     )
 
 
-def _create_map(pattern: str) -> list[int]:
+def _create_map(pattern: str, text: str) -> list[int]:
     syllable_map: list[int] = []
     i = 0
     n = len(pattern)
@@ -72,7 +78,10 @@ def _create_map(pattern: str) -> list[int]:
             elif p(1) == "C" and p(2) == "V":
                 syllable_map.append(1); i += 1
             elif p(1) == "C" and p(2) == "C" and p(3) == "V":
-                syllable_map.append(2); i += 2
+                if text[i + 1 : i + 3] in _ONSET_CLUSTERS:
+                    syllable_map.append(1); i += 1
+                else:
+                    syllable_map.append(2); i += 2
             elif p(1) == "C" and p(2) == "C" and p(3) == "C" and p(4) == "V":
                 syllable_map.append(3); i += 3
             elif p(1) == "C" and p(2) == "C":
@@ -163,7 +172,7 @@ def syllabify(word: str) -> list[str]:
         return [stripped]
 
     pattern = _classify(corrected)
-    syllable_map = _create_map(pattern)
+    syllable_map = _create_map(pattern, corrected)
 
     # Slice the corrected (placeholder) string so we know how much of
     # it belongs to each syllable.

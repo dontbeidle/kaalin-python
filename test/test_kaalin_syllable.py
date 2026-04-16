@@ -21,6 +21,26 @@ class TestKaalinSyllable(unittest.TestCase):
         self.assertEqual(syllabify("telefon"), ["te", "le", "fon"])
         self.assertEqual(syllabify("meniń"), ["me", "niń"])
         self.assertEqual(syllabify("seniń"), ["se", "niń"])
+        self.assertEqual(syllabify("geografiya"), ["ge", "o", "gra", "fi", "ya"])
+        self.assertEqual(syllabify("zoologiya"), ["zo", "o", "lo", "gi", "ya"])
+        self.assertEqual(syllabify("kooferativ"), ["ko", "o", "fe", "ra", "tiv"])
+        self.assertEqual(syllabify("aytıs"), ["ay", "tıs"])
+        self.assertEqual(syllabify("kele"), ["ke", "le"])
+        self.assertEqual(syllabify("jeti"), ["je", "ti"])
+        self.assertEqual(syllabify("qalaǵa"), ["qa", "la", "ǵa"])
+        self.assertEqual(syllabify("xalıq"), ["xa", "lıq"])
+        self.assertEqual(syllabify("baslaǵan"), ["bas", "la", "ǵan"])
+        self.assertEqual(syllabify("aqla"), ["aq", "la"])
+        self.assertEqual(syllabify("artqı"), ["art", "qı"])
+        self.assertEqual(syllabify("bas"), ["bas"])
+        self.assertEqual(syllabify("tas"), ["tas"])
+        self.assertEqual(syllabify("tis"), ["tis"])
+        self.assertEqual(syllabify("kún"), ["kún"])
+        self.assertEqual(syllabify("qant"), ["qant"])    
+        self.assertEqual(syllabify("balıq"), ["ba", "lıq"])
+        self.assertEqual(syllabify("bilimli"), ["bi", "lim", "li"])
+        self.assertEqual(syllabify("barıp"), ["ba", "rıp"])
+        self.assertEqual(syllabify("kelip"), ["ke", "lip"])
         
 
     def test_latin_complex_clusters(self):
@@ -64,6 +84,8 @@ class TestKaalinSyllable(unittest.TestCase):
         )
         self.assertEqual(syllabify("өзбекстан"), ["өз", "бек", "стан"])
         self.assertEqual(syllabify("шарапат"), ["ша", "ра", "пат"])
+        self.assertEqual(syllabify("барып"), ["ба", "рып"])
+        self.assertEqual(syllabify("келип"), ["ке", "лип"])
 
     def test_cyrillic_preserves_case(self):
         self.assertEqual(syllabify("Адам"), ["А", "дам"])
