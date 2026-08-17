@@ -1,7 +1,11 @@
-from kaalin.constants import latin_to_cyrillic, cyrillic_to_latin
+import re
+
+from kaalin.constants import latin_to_cyrillic, cyrillic_to_latin, loanwords
+
+_WORD_RE = re.compile(r'([a-zA-ZáÁǵǴıÍóÓúÚ]+)')
 
 
-def latin2cyrillic(text: str) -> str:
+def _convert_chars(text: str) -> str:
   result = []
   i = 0
   while i < len(text):
@@ -11,6 +15,51 @@ def latin2cyrillic(text: str) -> str:
     else:
       result.append(latin_to_cyrillic.get(text[i], text[i]))
       i += 1
+  return ''.join(result)
+
+
+def _apply_case(source: str, target: str) -> str:
+  if not source or not target:
+    return target
+  if source.isupper():
+    return target.upper()
+  if source[0].isupper():
+    return target[0].upper() + target[1:]
+  return target
+
+
+def latin2cyrillic(text: str, custom_loanwords: dict[str, str] | None = None) -> str:
+  merged = loanwords
+  if custom_loanwords:
+    merged = {**loanwords, **custom_loanwords}
+
+  sorted_keys = sorted(merged, key=len, reverse=True)
+
+  tokens = _WORD_RE.split(text)
+  result = []
+
+  for idx, token in enumerate(tokens):
+    if idx % 2 == 0:
+      result.append(token)
+    else:
+      word_lower = token.lower().replace('í', 'ı')
+      converted = None
+
+      if word_lower in merged:
+        converted = _apply_case(token, merged[word_lower])
+      else:
+        for key in sorted_keys:
+          if word_lower.startswith(key):
+            prefix_cyrillic = _apply_case(token[:len(key)], merged[key])
+            suffix_cyrillic = _convert_chars(token[len(key):])
+            converted = prefix_cyrillic + suffix_cyrillic
+            break
+
+      if converted is None:
+        converted = _convert_chars(token)
+
+      result.append(converted)
+
   return ''.join(result)
 
 
