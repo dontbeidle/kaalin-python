@@ -4,82 +4,53 @@
 [![Python](https://img.shields.io/pypi/pyversions/kaalin)](https://pypi.org/project/kaalin/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-A Python toolkit for the **Karakalpak language**: Latin-Cyrillic script conversion, number-to-words, and locale-aware string operations. Zero dependencies.
+A Python toolkit for the **Karakalpak language**. Zero dependencies, Python 3.10+.
 
-## Quick Start
+## Installation
 
 ```bash
 pip install kaalin
 ```
 
-```python
-from kaalin.converter import latin2cyrillic, cyrillic2latin
+## Script Conversion
 
-print(latin2cyrillic("Assalawma áleykum"))  # Ассалаўма әлейкум
-print(cyrillic2latin("Ассалаўма әлейкум"))  # Assalawma áleykum
-```
-
-## Supported Features
-
-| Feature | Description |
-|---|---|
-| **Script Conversion** | Bidirectional Latin ↔ Cyrillic conversion with multi-character mapping (`sh`→`ш`, `ch`→`ч`) and special Cyrillic rules (`ьи`→`yi`, `ьо`→`yo`, `ъе`→`ye`) |
-| **Number to Words** | Converts integers and floats to Karakalpak words in Latin or Cyrillic script. Supports range 0 to 10³⁰, negative numbers, and decimal fractions |
-| **Word Syllabification** | Splits Karakalpak words into syllables, works with both Latin and Cyrillic scripts, preserves letter case, and recognises digraphs like `sh`, `ch`, `yu`, `ya`, `aw`, `ew` |
-| **String Utilities** | Karakalpak-aware `upper()` / `lower()` that correctly handle the dotless `ı` ↔ `Í` character pair |
-| **CLI Tools** | `cyr2lat` and `lat2cyr` commands for converting text files from the terminal |
-
-## API Reference
-
-### Script Conversion
+Bidirectional Latin ↔ Cyrillic conversion. Loanwords with special characters (ь, ъ, э, ё, щ) are handled automatically.
 
 ```python
 from kaalin.converter import latin2cyrillic, cyrillic2latin
 
-latin2cyrillic("Qaraqalpaqstan")    # Қарақалпақстан
-cyrillic2latin("Қарақалпақстан")    # Qaraqalpaqstan
+latin2cyrillic("Assalawma áleykum")  # Ассалаўма әлейкум
+cyrillic2latin("Ассалаўма әлейкум")  # Assalawma áleykum
+
+# You can extend the built-in loanword dictionary with your own entries
+latin2cyrillic("stilistika", custom_loanwords={"stilistika": "стилистика"})
 ```
 
-Both functions accept a `str` and return a `str`. The converter handles uppercase, lowercase, and mixed-case text.
+## Number to Words
 
-### Number to Words
+Converts numbers to Karakalpak words. Supports integers, floats, and negatives up to 10³⁰.
 
 ```python
-from kaalin.number import to_word, NumberRangeError
+from kaalin.number import to_word
 
-to_word(123)                     # bir júz jigirma úsh
-to_word(999, num_type="cyr")     # тоғыз жүз тоқсан тоғыз
-to_word(12.75)                   # on eki pútin júzden jetpis bes
-to_word(-42)                     # minus qırıq eki
+to_word(123)                   # bir júz jigirma úsh
+to_word(999, num_type="cyr")   # тоғыз жүз тоқсан тоғыз
 ```
 
-**Parameters:**
-- `number` (`int | float`) — the number to convert
-- `num_type` (`str`) — output script: `"lat"` (default) or `"cyr"`
+## Syllabification
 
-**Raises:** `NumberRangeError` if `number` exceeds 10³⁰.
-
-### Word Syllabification
+Splits words into syllables. Works with both Latin and Cyrillic input.
 
 ```python
 from kaalin.syllable import syllabify
 
 syllabify("qaraqalpaqstan")   # ['qa', 'ra', 'qal', 'paq', 'stan']
-syllabify("kompyuter")        # ['kom', 'pyu', 'ter']
 syllabify("Шарапат")          # ['Ша', 'ра', 'пат']
-syllabify("Adam")             # ['A', 'dam']
-
-"-".join(syllabify("úydegiler"))   # 'úy-de-gi-ler'
 ```
 
-**Parameters:**
-- `word` (`str`) — the word to split. Accepts Latin or Cyrillic input.
+## String Utilities
 
-**Returns:** A `list[str]` of syllables in the same script as the input. Words with fewer than two vowels are returned as a single-element list unchanged.
-
-**Raises:** `TypeError` if `word` is not a string.
-
-### String Utilities
+Karakalpak-aware `upper()` / `lower()` that correctly handle the dotless `ı` ↔ `Í` pair.
 
 ```python
 from kaalin.string import upper, lower
@@ -88,34 +59,68 @@ upper("Assalawma áleykum")   # ASSALAWMA ÁLEYKUM
 lower("ASSALAWMA ÁLEYKUM")   # assalawma áleykum
 ```
 
-Python's built-in `str.upper()` / `str.lower()` does not handle the Karakalpak dotless `ı` correctly. These functions fix that.
+## CLI
 
-## CLI Usage
-
-Convert text files between scripts directly from the terminal:
+Convert text files between scripts from the terminal:
 
 ```bash
-# Cyrillic → Latin
 cyr2lat input.txt              # writes input-lat.txt
-cyr2lat input.txt output.txt   # writes output.txt
-
-# Latin → Cyrillic
 lat2cyr input.txt              # writes input-cyr.txt
-lat2cyr input.txt output.txt   # writes output.txt
 ```
 
-## When to Use Kaalin
+## License
 
-- Converting Karakalpak text between Latin and Cyrillic scripts
-- Displaying numbers as Karakalpak words (invoices, checks, education)
-- Splitting words into syllables for hyphenation, typesetting, or language learning
-- NLP preprocessing for Karakalpak text (script normalization)
-- Building Karakalpak-language applications that need locale-aware string operations
-- Batch-converting text files via CLI
+MIT
 
-## When NOT to Use Kaalin
+<!--
+API REFERENCE FOR AI AGENTS
 
-- **Not a translator** — it converts scripts (Latin ↔ Cyrillic), not languages
-- **Not a spell-checker** — it does not validate or correct Karakalpak text
-- **Not for other Turkic languages** — Kazakh, Uzbek, Turkish, etc. have different alphabets and rules
-- **Not an OCR tool** — it works with digital text, not images
+## converter
+
+from kaalin.converter import latin2cyrillic, cyrillic2latin
+
+latin2cyrillic(text: str, custom_loanwords: dict[str, str] | None = None) -> str
+  Converts Latin script to Cyrillic. Handles multi-char sequences (sh→ш, ch→ч, ya→я, yu→ю).
+  Built-in loanword dictionary handles words with ь, ъ, э, ё, щ automatically.
+  custom_loanwords merges with (and overrides) built-in dict.
+  Supports uppercase, lowercase, and mixed-case text.
+
+cyrillic2latin(text: str) -> str
+  Converts Cyrillic script to Latin. Handles special rules: ьи→yi, ьо→yo, ъе→ye.
+
+## number
+
+from kaalin.number import to_word, NumberRangeError
+
+to_word(number: int | float, num_type: str = "lat") -> str
+  Converts number to Karakalpak words.
+  num_type: "lat" (default) or "cyr" for output script.
+  Supports: 0 to 10^30, negatives, floats.
+  Raises NumberRangeError if number exceeds 10^30.
+
+## syllable
+
+from kaalin.syllable import syllabify
+
+syllabify(word: str) -> list[str]
+  Splits word into syllables. Works with Latin and Cyrillic input.
+  Auto-detects script. Preserves original case.
+  Words with fewer than two vowels are returned as single-element list.
+  Raises TypeError if input is not a string.
+
+## string
+
+from kaalin.string import upper, lower
+
+upper(text: str) -> str
+  Karakalpak-aware uppercase. Handles dotless ı → Í correctly.
+
+lower(text: str) -> str
+  Karakalpak-aware lowercase. Handles Í → ı correctly.
+
+## CLI
+
+cyr2lat input.txt [output.txt]   Cyrillic → Latin file conversion
+lat2cyr input.txt [output.txt]   Latin → Cyrillic file conversion
+Default output: input-lat.txt / input-cyr.txt
+-->
