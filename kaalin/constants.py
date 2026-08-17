@@ -176,3 +176,74 @@ latin_to_cyrillic_lowercase = {
 
 cyrillic_to_latin = cyrillic_to_latin_uppercase | cyrillic_to_latin_lowercase
 latin_to_cyrillic = latin_to_cyrillic_uppercase | latin_to_cyrillic_lowercase
+
+loanwords = {
+  # ь (soft sign)
+  "avtomobil": "автомобиль",
+  "akropol": "акрополь",
+  "bolshoy": "большой",
+  "veksel": "вексель",
+  "gegel": "гегель",
+  "delta": "дельта",
+  "dúnya": "дүнья",
+  "dárya": "дәрья",
+  "impuls": "импульс",
+  "knyaz": "князь",
+  "kompyuter": "компьютер",
+  "korol": "король",
+  "krovat": "кровать",
+  "model": "модель",
+  "neapol": "неаполь",
+  "nol": "ноль",
+  "oblast": "область",
+  "optimal": "оптималь",
+  "parallel": "параллель",
+  "pech": "печь",
+  "relef": "рельеф",
+  "rol": "роль",
+  "rıcar": "рыцарь",
+  "statya": "статья",
+  "stil": "стиль",
+  "fevral": "февраль",
+  "filtraciya": "фильтрация",
+  "folklor": "фольклор",
+
+  # э
+  "aloe": "алоэ",
+  "koefficient": "коэффициент",
+  "poeziya": "поэзия",
+  "poet": "поэт",
+  "evolyuciya": "эволюция",
+  "ekzistencializm": "экзистенциализм",
+  "ekzonim": "экзоним",
+  "ekologiya": "экология",
+  "ekonomika": "экономика",
+  "ekran": "экран",
+  "eksperiment": "эксперимент",
+  "ekspert": "эксперт",
+  "ekspressiv": "экспрессив",
+  "elektron": "электрон",
+  "element": "элемент",
+  "emitent": "эмитент",
+  "emocional": "эмоционал",
+  "empiriya": "эмпирия",
+  "enciklopediya": "энциклопедия",
+  "epotoponim": "эпотопоним",
+  "etika": "этика",
+  "etimologiya": "этимология",
+
+  # ъ (hard sign)
+  "obyekt": "объект",
+  "obyektiv": "объектив",
+  "subyekt": "субъект",
+  "subyektiv": "субъектив",
+
+  # ё
+  "samolyot": "самолёт",
+  "schyot": "счёт",
+
+  # щ
+  "obshina": "община",
+  "borsh": "борщ",
+  "shchit": "щит",
+}
