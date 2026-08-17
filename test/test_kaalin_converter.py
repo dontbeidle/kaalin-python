@@ -27,6 +27,80 @@ class TestKaalinConverter(unittest.TestCase):
     self.assertEqual(latin2cyrillic("evropa"), "европа")
     self.assertEqual(latin2cyrillic("ÁJINIYAZ"), "ӘЖИНИЯЗ")
 
+  def test_latin2cyrillic_loanwords_soft_sign(self):
+    """Soft sign (ь) must not be dropped in borrowed words."""
+    self.assertEqual(latin2cyrillic("avtomobil"), "автомобиль")
+    self.assertEqual(latin2cyrillic("akropol"), "акрополь")
+    self.assertEqual(latin2cyrillic("bolshoy"), "большой")
+    self.assertEqual(latin2cyrillic("veksel"), "вексель")
+    self.assertEqual(latin2cyrillic("gegel"), "гегель")
+    self.assertEqual(latin2cyrillic("delta"), "дельта")
+    self.assertEqual(latin2cyrillic("dúnya"), "дүнья")
+    self.assertEqual(latin2cyrillic("dárya"), "дәрья")
+    self.assertEqual(latin2cyrillic("impuls"), "импульс")
+    self.assertEqual(latin2cyrillic("knyaz"), "князь")
+    self.assertEqual(latin2cyrillic("kompyuter"), "компьютер")
+    self.assertEqual(latin2cyrillic("korol"), "король")
+    self.assertEqual(latin2cyrillic("krovat"), "кровать")
+    self.assertEqual(latin2cyrillic("model"), "модель")
+    self.assertEqual(latin2cyrillic("neapol"), "неаполь")
+    self.assertEqual(latin2cyrillic("nol"), "ноль")
+    self.assertEqual(latin2cyrillic("oblast"), "область")
+    self.assertEqual(latin2cyrillic("optimal"), "оптималь")
+    self.assertEqual(latin2cyrillic("parallel"), "параллель")
+    self.assertEqual(latin2cyrillic("pech"), "печь")
+    self.assertEqual(latin2cyrillic("relef"), "рельеф")
+    self.assertEqual(latin2cyrillic("rol"), "роль")
+    self.assertEqual(latin2cyrillic("rıcar"), "рыцарь")
+    self.assertEqual(latin2cyrillic("statya"), "статья")
+    self.assertEqual(latin2cyrillic("stil"), "стиль")
+    self.assertEqual(latin2cyrillic("fevral"), "февраль")
+    self.assertEqual(latin2cyrillic("filtraciya"), "фильтрация")
+    self.assertEqual(latin2cyrillic("folklor"), "фольклор")
+
+  def test_latin2cyrillic_loanwords_э(self):
+    """э must not become е in borrowed words."""
+    self.assertEqual(latin2cyrillic("aloe"), "алоэ")
+    self.assertEqual(latin2cyrillic("koefficient"), "коэффициент")
+    self.assertEqual(latin2cyrillic("poeziya"), "поэзия")
+    self.assertEqual(latin2cyrillic("poet"), "поэт")
+    self.assertEqual(latin2cyrillic("evolyuciya"), "эволюция")
+    self.assertEqual(latin2cyrillic("ekzistencializm"), "экзистенциализм")
+    self.assertEqual(latin2cyrillic("ekzonim"), "экзоним")
+    self.assertEqual(latin2cyrillic("ekologiya"), "экология")
+    self.assertEqual(latin2cyrillic("ekonomika"), "экономика")
+    self.assertEqual(latin2cyrillic("ekran"), "экран")
+    self.assertEqual(latin2cyrillic("eksperiment"), "эксперимент")
+    self.assertEqual(latin2cyrillic("ekspert"), "эксперт")
+    self.assertEqual(latin2cyrillic("ekspressiv"), "экспрессив")
+    self.assertEqual(latin2cyrillic("elektron"), "электрон")
+    self.assertEqual(latin2cyrillic("element"), "элемент")
+    self.assertEqual(latin2cyrillic("emitent"), "эмитент")
+    self.assertEqual(latin2cyrillic("emocional"), "эмоционал")
+    self.assertEqual(latin2cyrillic("empiriya"), "эмпирия")
+    self.assertEqual(latin2cyrillic("enciklopediya"), "энциклопедия")
+    self.assertEqual(latin2cyrillic("epotoponim"), "эпотопоним")
+    self.assertEqual(latin2cyrillic("etika"), "этика")
+    self.assertEqual(latin2cyrillic("etimologiya"), "этимология")
+
+  def test_latin2cyrillic_loanwords_hard_sign(self):
+    """ъ must not become й in borrowed words."""
+    self.assertEqual(latin2cyrillic("obyekt"), "объект")
+    self.assertEqual(latin2cyrillic("obyektiv"), "объектив")
+    self.assertEqual(latin2cyrillic("subyekt"), "субъект")
+    self.assertEqual(latin2cyrillic("subyektiv"), "субъектив")
+
+  def test_latin2cyrillic_loanwords_ё(self):
+    """ё must not become йо in borrowed words."""
+    self.assertEqual(latin2cyrillic("samolyot"), "самолёт")
+    self.assertEqual(latin2cyrillic("schyot"), "счёт")
+
+  def test_latin2cyrillic_loanwords_щ(self):
+    """щ must not become ш in borrowed words."""
+    self.assertEqual(latin2cyrillic("obshina"), "община")
+    self.assertEqual(latin2cyrillic("borsh"), "борщ")
+    self.assertEqual(latin2cyrillic("shchit"), "щит")
+
 
 if __name__ == '__main__':
   unittest.main()
