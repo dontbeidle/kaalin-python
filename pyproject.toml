@@ -37,6 +37,9 @@ classifiers = [
     "Topic :: Text Processing :: Linguistic",
 ]
 
+[project.optional-dependencies]
+dev = ["pytest"]
+
 [project.urls]
 Homepage = "https://github.com/dontbeidle/kaalin-python"
 Repository = "https://github.com/dontbeidle/kaalin-python"
