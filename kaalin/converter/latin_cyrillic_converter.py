@@ -2,7 +2,7 @@ import re
 
 from kaalin.constants import latin_to_cyrillic, cyrillic_to_latin, loanwords
 
-_WORD_RE = re.compile(r'([a-zA-ZáÁǵǴıÍóÓúÚ]+)')
+_WORD_RE = re.compile(r'([a-zA-ZáÁǵǴıÍńŃóÓúÚ]+)')
 
 
 def _convert_chars(text: str) -> str:
