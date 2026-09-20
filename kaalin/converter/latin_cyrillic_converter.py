@@ -66,8 +66,22 @@ def latin2cyrillic(text: str, custom_loanwords: dict[str, str] | None = None) ->
 def cyrillic2latin(text: str) -> str:
   text = handle_special_cyrillic_rules_if_needed(text)
   result = []
-  for char in text:
-    result.append(cyrillic_to_latin.get(char, char))
+  for i, char in enumerate(text):
+    replacement = cyrillic_to_latin.get(char, char)
+    if len(replacement) > 1 and char.isupper():
+      prev_upper = False
+      next_upper = False
+      for j in range(i - 1, -1, -1):
+        if text[j].isalpha():
+          prev_upper = text[j].isupper()
+          break
+      for j in range(i + 1, len(text)):
+        if text[j].isalpha():
+          next_upper = text[j].isupper()
+          break
+      if prev_upper or next_upper:
+        replacement = replacement.upper()
+    result.append(replacement)
   return ''.join(result)
 
 
