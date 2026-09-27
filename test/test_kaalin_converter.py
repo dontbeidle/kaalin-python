@@ -101,6 +101,7 @@ class TestKaalinConverter(unittest.TestCase):
     self.assertEqual(latin2cyrillic("obshina"), "община")
     self.assertEqual(latin2cyrillic("borsh"), "борщ")
     self.assertEqual(latin2cyrillic("shit"), "щит")
+    self.assertEqual(latin2cyrillic("shchit"), "щит")
 
   def test_latin2cyrillic_soft_sign_before_vowel_suffix(self):
     """A stem-final ь is dropped before a vowel-initial suffix, kept before a consonant."""
@@ -166,9 +167,16 @@ class TestKaalinConverter(unittest.TestCase):
     self.assertEqual(broken, [])
 
   def test_loanword_keys_match_their_values(self):
-    """Each key must be the latin transliteration of its cyrillic value."""
+    """Each key must be the latin transliteration of its cyrillic value.
+
+    Aliases are exempt: they accept a spelling a user may type even though
+    cyrillic2latin never produces it. "shchit" is the russian-style
+    transliteration of щит, which cyrillic2latin renders as "shit".
+    """
+    aliases = {'shchit'}
     mismatched = [(key, value) for key, value in loanwords.items()
-                  if cyrillic2latin(value).lower().replace('í', 'ı') != key]
+                  if key not in aliases
+                  and cyrillic2latin(value).lower().replace('í', 'ı') != key]
     self.assertEqual(mismatched, [])
 
   def test_loanword_keys_are_long_enough(self):
