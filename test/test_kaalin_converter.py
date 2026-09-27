@@ -1,4 +1,5 @@
 import unittest
+from kaalin.constants import loanwords
 from kaalin.converter.latin_cyrillic_converter import latin2cyrillic, cyrillic2latin
 
 
@@ -99,7 +100,84 @@ class TestKaalinConverter(unittest.TestCase):
     """щ must not become ш in borrowed words."""
     self.assertEqual(latin2cyrillic("obshina"), "община")
     self.assertEqual(latin2cyrillic("borsh"), "борщ")
-    self.assertEqual(latin2cyrillic("shchit"), "щит")
+    self.assertEqual(latin2cyrillic("shit"), "щит")
+
+  def test_latin2cyrillic_soft_sign_before_vowel_suffix(self):
+    """A stem-final ь is dropped before a vowel-initial suffix, kept before a consonant."""
+    self.assertEqual(latin2cyrillic("oktyabrinde"), "октябринде")
+    self.assertEqual(latin2cyrillic("oktyabrde"), "октябрьде")
+    self.assertEqual(latin2cyrillic("sekretarı"), "секретары")
+    self.assertEqual(latin2cyrillic("sekretardıń"), "секретарьдың")
+    self.assertEqual(latin2cyrillic("lageri"), "лагери")
+    self.assertEqual(latin2cyrillic("lagerdiń"), "лагерьдиң")
+    self.assertEqual(latin2cyrillic("avtomobilin"), "автомобилин")
+    self.assertEqual(latin2cyrillic("avtomobiller"), "автомобильлер")
+    self.assertEqual(latin2cyrillic("ansambli"), "ансамбли")
+    self.assertEqual(latin2cyrillic("ansambldi"), "ансамбльди")
+    self.assertEqual(latin2cyrillic("tabeli"), "табели")
+    self.assertEqual(latin2cyrillic("spektaklinde"), "спектаклинде")
+    self.assertEqual(latin2cyrillic("modeli"), "модели")
+    self.assertEqual(latin2cyrillic("dvigateliniń"), "двигателиниң")
+
+  def test_latin2cyrillic_loanword_does_not_steal_longer_word(self):
+    """A short loanword key must not swallow a longer, unrelated word."""
+    self.assertEqual(latin2cyrillic("cirkul"), "циркуль")
+    self.assertEqual(latin2cyrillic("cirkulyar"), "циркуляр")
+    self.assertEqual(latin2cyrillic("ventil"), "вентиль")
+    self.assertEqual(latin2cyrillic("ventilyaciya"), "вентиляция")
+    self.assertEqual(latin2cyrillic("ventilyator"), "вентилятор")
+    self.assertEqual(latin2cyrillic("modul"), "модуль")
+    self.assertEqual(latin2cyrillic("modulyaciya"), "модуляция")
+    self.assertEqual(latin2cyrillic("kontrol"), "контроль")
+    self.assertEqual(latin2cyrillic("kontroller"), "контроллер")
+
+  def test_latin2cyrillic_new_loanwords(self):
+    """Words added from the qaraqalpaq explanatory dictionary."""
+    self.assertEqual(latin2cyrillic("apelsin"), "апельсин")
+    self.assertEqual(latin2cyrillic("aprel"), "апрель")
+    self.assertEqual(latin2cyrillic("asfalt"), "асфальт")
+    self.assertEqual(latin2cyrillic("bulvar"), "бульвар")
+    self.assertEqual(latin2cyrillic("dekabr"), "декабрь")
+    self.assertEqual(latin2cyrillic("kartofel"), "картофель")
+    self.assertEqual(latin2cyrillic("kolco"), "кольцо")
+    self.assertEqual(latin2cyrillic("korabl"), "корабль")
+    self.assertEqual(latin2cyrillic("palto"), "пальто")
+    self.assertEqual(latin2cyrillic("fakultet"), "факультет")
+    self.assertEqual(latin2cyrillic("aeroport"), "аэропорт")
+    self.assertEqual(latin2cyrillic("energiya"), "энергия")
+    self.assertEqual(latin2cyrillic("eskiz"), "эскиз")
+    self.assertEqual(latin2cyrillic("podyezd"), "подъезд")
+    self.assertEqual(latin2cyrillic("semya"), "семья")
+    self.assertEqual(latin2cyrillic("sudya"), "судья")
+    self.assertEqual(latin2cyrillic("plash"), "плащ")
+    self.assertEqual(latin2cyrillic("ovosh"), "овощ")
+
+  def test_latin2cyrillic_preserves_case(self):
+    """Loanword lookup must keep the casing of the source token."""
+    self.assertEqual(latin2cyrillic("Aprel"), "Апрель")
+    self.assertEqual(latin2cyrillic("APREL"), "АПРЕЛЬ")
+    self.assertEqual(latin2cyrillic("Sekretarı"), "Секретары")
+    self.assertEqual(latin2cyrillic("KORABL"), "КОРАБЛЬ")
+
+  def test_loanword_round_trip(self):
+    """Every loanword must survive cyrillic -> latin -> cyrillic unchanged."""
+    broken = [cyr for cyr in loanwords.values()
+              if latin2cyrillic(cyrillic2latin(cyr)) != cyr]
+    self.assertEqual(broken, [])
+
+  def test_loanword_keys_match_their_values(self):
+    """Each key must be the latin transliteration of its cyrillic value."""
+    mismatched = [(key, value) for key, value in loanwords.items()
+                  if cyrillic2latin(value).lower().replace('í', 'ı') != key]
+    self.assertEqual(mismatched, [])
+
+  def test_loanword_keys_are_long_enough(self):
+    """Very short keys match too many unrelated words through prefix lookup.
+
+    "a" would rewrite every word starting with a, "al" every form of alıw.
+    """
+    too_short = [key for key in loanwords if len(key) < 3]
+    self.assertEqual(too_short, [])
 
 
 if __name__ == '__main__':

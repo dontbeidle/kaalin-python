@@ -2,7 +2,8 @@ import re
 
 from kaalin.constants import latin_to_cyrillic, cyrillic_to_latin, loanwords
 
-_WORD_RE = re.compile(r'([a-zA-ZáÁǵǴıÍóÓúÚ]+)')
+_WORD_RE = re.compile(r'([a-zA-ZáÁǵǴıÍńŃóÓúÚ]+)')
+_LATIN_VOWELS = frozenset('aáeiıoóuúAÁEIÍOÓUÚ')
 
 
 def _convert_chars(text: str) -> str:
@@ -50,8 +51,12 @@ def latin2cyrillic(text: str, custom_loanwords: dict[str, str] | None = None) ->
       else:
         for key in sorted_keys:
           if word_lower.startswith(key):
-            prefix_cyrillic = _apply_case(token[:len(key)], merged[key])
-            suffix_cyrillic = _convert_chars(token[len(key):])
+            suffix = token[len(key):]
+            stem = merged[key]
+            if stem.endswith('ь') and suffix and suffix[0] in _LATIN_VOWELS:
+              stem = stem[:-1]
+            prefix_cyrillic = _apply_case(token[:len(key)], stem)
+            suffix_cyrillic = _convert_chars(suffix)
             converted = prefix_cyrillic + suffix_cyrillic
             break
 
@@ -66,8 +71,22 @@ def latin2cyrillic(text: str, custom_loanwords: dict[str, str] | None = None) ->
 def cyrillic2latin(text: str) -> str:
   text = handle_special_cyrillic_rules_if_needed(text)
   result = []
-  for char in text:
-    result.append(cyrillic_to_latin.get(char, char))
+  for i, char in enumerate(text):
+    replacement = cyrillic_to_latin.get(char, char)
+    if len(replacement) > 1 and char.isupper():
+      prev_upper = False
+      next_upper = False
+      for j in range(i - 1, -1, -1):
+        if text[j].isalpha():
+          prev_upper = text[j].isupper()
+          break
+      for j in range(i + 1, len(text)):
+        if text[j].isalpha():
+          next_upper = text[j].isupper()
+          break
+      if prev_upper or next_upper:
+        replacement = replacement.upper()
+    result.append(replacement)
   return ''.join(result)
 
 
