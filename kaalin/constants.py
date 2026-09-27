@@ -577,6 +577,7 @@ loanwords = {
   "samozashita": "самозащита",
   "shebet": "щебет",
   "shetka": "щетка",
+  "shchit": "щит",
   "shit": "щит",
   "svarshik": "сварщик",
   "yashik": "ящик",
