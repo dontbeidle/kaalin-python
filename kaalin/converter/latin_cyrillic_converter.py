@@ -1,6 +1,9 @@
 import re
+import unicodedata
 
-from kaalin.constants import latin_to_cyrillic, cyrillic_to_latin, loanwords
+from kaalin.constants import (
+  latin_to_cyrillic, cyrillic_to_latin, loanwords, cyrillic_variants, apostrophes, apostrophe_letters,
+)
 
 _WORD_RE = re.compile(r'([a-zA-ZáÁǵǴıÍńŃóÓúÚ]+)')
 _LATIN_VOWELS = frozenset('aáeiıoóuúAÁEIÍOÓUÚ')
@@ -29,7 +32,44 @@ def _apply_case(source: str, target: str) -> str:
   return target
 
 
-def latin2cyrillic(text: str, custom_loanwords: dict[str, str] | None = None) -> str:
+def join_apostrophes(text: str) -> str:
+  """Writes the apostrophe spelling in Karakalpak letters: o'zbek → ózbek, g‘alaba → ǵalaba, bardi' → bardı.
+
+  An apostrophe after a, g, i, n, o or u is joined to that letter inside a word and at its end. An apostrophe
+  that closes a quotation is kept: in 'Jańa Ózbekstan' the last apostrophe follows n but closes the quotation.
+  """
+  out = []
+  quoted = False  # an opening apostrophe is waiting for its closing one
+  prev_letter = False
+  i, n = 0, len(text)
+  while i < n:
+    ch = text[i]
+    nxt = text[i + 1] if i + 1 < n else ''
+    if ch in apostrophe_letters and nxt and nxt in apostrophes:
+      after = text[i + 2] if i + 2 < n else ''
+      if after.isalpha() or not quoted:
+        out.append(apostrophe_letters[ch])
+        prev_letter = True
+        i += 2
+        continue
+    if ch in apostrophes:
+      if not prev_letter and nxt.isalpha():
+        quoted = True  # opening quotation mark
+      elif prev_letter and not nxt.isalpha():
+        quoted = False  # closing quotation mark
+    elif ch in '\n\r.!?':
+      quoted = False
+    prev_letter = ch.isalpha()
+    out.append(ch)
+    i += 1
+  return ''.join(out)
+
+
+def latin2cyrillic(text: str, custom_loanwords: dict[str, str] | None = None, apostrophe_spelling: bool = True) -> str:
+  text = unicodedata.normalize('NFC', text)
+  if apostrophe_spelling:
+    text = join_apostrophes(text)
+
   merged = loanwords
   if custom_loanwords:
     merged = {**loanwords, **custom_loanwords}
@@ -69,6 +109,7 @@ def latin2cyrillic(text: str, custom_loanwords: dict[str, str] | None = None) ->
 
 
 def cyrillic2latin(text: str) -> str:
+  text = unicodedata.normalize('NFC', text).translate(cyrillic_variants)
   text = handle_special_cyrillic_rules_if_needed(text)
   result = []
   for i, char in enumerate(text):
@@ -90,14 +131,19 @@ def cyrillic2latin(text: str) -> str:
   return ''.join(result)
 
 
-def handle_special_cyrillic_rules_if_needed(text: str) -> str:
-  special_rule_pairs = {
-    'ьи': 'yi',
-    'ьо': 'yo',
-    'ъе': 'ye',
-  }
+# A sign between a letter and a vowel is read as y: Ильин → Ilyin, павильон → pavilyon, объект → obyekt, пьеса → pyesa
+_SIGN_VOWEL_RE = re.compile(r'(?<=[^\W\d_])([ьЬ][иое]|[ъЪ]е)', re.IGNORECASE)
+_SIGN_VOWEL = {'ьи': 'yi', 'ьо': 'yo', 'ье': 'ye', 'ъе': 'ye'}
 
-  for cyr, lat in special_rule_pairs.items():
-    if cyr in text and not text.startswith(cyr):
-      text = text.replace(cyr, lat)
-  return text
+
+def handle_special_cyrillic_rules_if_needed(text: str) -> str:
+  def repl(m: re.Match) -> str:
+    pair = m.group(1)
+    lat = _SIGN_VOWEL.get(pair.lower())
+    if lat is None:
+      return pair
+    if pair[1].isupper():
+      return lat.upper() if pair[0].isupper() else 'y' + lat[1].upper()
+    return lat
+
+  return _SIGN_VOWEL_RE.sub(repl, text)
