@@ -187,6 +187,44 @@ class TestKaalinConverter(unittest.TestCase):
     too_short = [key for key in loanwords if len(key) < 3]
     self.assertEqual(too_short, [])
 
+  def test_loanwords_from_news_round_trip_with_suffixes(self):
+    """Frequent words of Karakalpak news keep э, ё, ь and ъ, also with a suffix."""
+    for cyr in ["экспортқа", "электр", "Мирзиёевтиң", "Әмиўдәрья", "медальды", "Беларусь", "нефть",
+                "волонтёрлар", "экосистемасын", "ҚАШҚАДӘРЬЯ"]:
+      self.assertEqual(latin2cyrillic(cyrillic2latin(cyr)), cyr)
+    self.assertEqual(latin2cyrillic("Elektr energiyasın eksportqa shıǵarıw"), "Электр энергиясын экспортқа шығарыў")
+    self.assertEqual(latin2cyrillic("ekshembi ekseń"), "екшемби ексең")
+
+  def test_cyrillic2latin_old_font_letters(self):
+    """Old fonts write ѳ, ӊ, ӯ, ӳ, ӱ and ӽ in place of ө, ң, ў and ҳ."""
+    self.assertEqual(cyrillic2latin("Нѳкис оқытыўшыныӊ"), "Nókis oqıtıwshınıń")
+    self.assertEqual(cyrillic2latin("қорғаӯ суӳ таӱ"), "qorǵaw suw taw")
+    self.assertEqual(cyrillic2latin("ӼАЯЛЛАР ӽаял"), "HAYALLAR hayal")
+    self.assertEqual(cyrillic2latin("ѲЗБЕКСТАН Ӊ"), "ÓZBEKSTAN Ń")
+
+  def test_cyrillic2latin_signs_before_vowels_keep_case(self):
+    self.assertEqual(cyrillic2latin("ОБЪЕКТ"), "OBYEKT")
+    self.assertEqual(cyrillic2latin("ИЛЬИН"), "ILYIN")
+    self.assertEqual(cyrillic2latin("ПАВИЛЬОН"), "PAVILYON")
+    self.assertEqual(cyrillic2latin("ьи объект"), "i obyekt")
+
+  def test_decomposed_letters(self):
+    """Letters written as a base letter and a combining mark are read as one letter."""
+    self.assertEqual(latin2cyrillic("Ájiniyaz"), "Әжинияз")
+    self.assertEqual(cyrillic2latin("йыл"), "yıl")
+
+  def test_latin2cyrillic_apostrophe_spelling(self):
+    """o'zbek is written ózbek: an apostrophe after a, g, i, n, o or u is part of the letter."""
+    self.assertEqual(latin2cyrillic("O'zbekstan qi'zdi'n' g'alaba U'YDE A'DEBIYAT"),
+                     "Өзбекстан қыздың ғалаба ҮЙДЕ ӘДЕБИЯТ")
+    self.assertEqual(latin2cyrillic("so‘z soʻz so’z so`z"), "сөз сөз сөз сөз")
+    # an apostrophe at the end of a word is part of the letter: bardi' = bardı
+    self.assertEqual(latin2cyrillic("bardi' kitabi'"), "барды китабы")
+    # but an apostrophe that closes a quotation is kept
+    self.assertEqual(latin2cyrillic("'Jańa Ózbekstan' gazetası"), "'Жаңа Өзбекстан' газетасы")
+    self.assertEqual(latin2cyrillic("'Qazan' qalası"), "'Қазан' қаласы")
+    self.assertEqual(latin2cyrillic("O'zbekstan", apostrophe_spelling=False), "О'збекстан")
+
 
 if __name__ == '__main__':
   unittest.main()
