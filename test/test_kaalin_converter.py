@@ -50,7 +50,7 @@ class TestKaalinConverter(unittest.TestCase):
     self.assertEqual(latin2cyrillic("optimal"), "оптималь")
     self.assertEqual(latin2cyrillic("parallel"), "параллель")
     self.assertEqual(latin2cyrillic("pech"), "печь")
-    self.assertEqual(latin2cyrillic("relef"), "рельеф")
+    self.assertEqual(latin2cyrillic("relyef"), "рельеф")
     self.assertEqual(latin2cyrillic("rol"), "роль")
     self.assertEqual(latin2cyrillic("rıcar"), "рыцарь")
     self.assertEqual(latin2cyrillic("statya"), "статья")
@@ -207,6 +207,14 @@ class TestKaalinConverter(unittest.TestCase):
     self.assertEqual(cyrillic2latin("ИЛЬИН"), "ILYIN")
     self.assertEqual(cyrillic2latin("ПАВИЛЬОН"), "PAVILYON")
     self.assertEqual(cyrillic2latin("ьи объект"), "i obyekt")
+
+  def test_soft_sign_before_e_is_ye(self):
+    """ье is written ye, like ъе: пьеса → pyesa, and back."""
+    self.assertEqual(cyrillic2latin("пьеса"), "pyesa")
+    self.assertEqual(cyrillic2latin("ПЬЕСА"), "PYESA")
+    self.assertEqual(cyrillic2latin("Вьетнам премьер-министри"), "Vyetnam premyer-ministri")
+    for cyr in ["пьесасы", "Вьетнамда", "курьерлик", "рельеф", "интерьер", "карьера"]:
+      self.assertEqual(latin2cyrillic(cyrillic2latin(cyr)), cyr)
 
   def test_decomposed_letters(self):
     """Letters written as a base letter and a combining mark are read as one letter."""

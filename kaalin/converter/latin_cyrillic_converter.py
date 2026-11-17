@@ -131,9 +131,9 @@ def cyrillic2latin(text: str) -> str:
   return ''.join(result)
 
 
-# A sign between a letter and a vowel is read as y: Ильин → Ilyin, павильон → pavilyon, объект → obyekt
-_SIGN_VOWEL_RE = re.compile(r'(?<=[^\W\d_])(ь[ио]|Ь[ИОио]|ъе|Ъ[Ее])', re.IGNORECASE)
-_SIGN_VOWEL = {'ьи': 'yi', 'ьо': 'yo', 'ъе': 'ye'}
+# A sign between a letter and a vowel is read as y: Ильин → Ilyin, павильон → pavilyon, объект → obyekt, пьеса → pyesa
+_SIGN_VOWEL_RE = re.compile(r'(?<=[^\W\d_])([ьЬ][иое]|[ъЪ]е)', re.IGNORECASE)
+_SIGN_VOWEL = {'ьи': 'yi', 'ьо': 'yo', 'ье': 'ye', 'ъе': 'ye'}
 
 
 def handle_special_cyrillic_rules_if_needed(text: str) -> str:
